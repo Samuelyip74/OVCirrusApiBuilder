@@ -3,6 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
 }
 
+group = "com.al_enterprise"
+version = "10.4.3"
+
 android {
     namespace = "com.al_enterprise"
     compileSdk = 35
@@ -21,6 +24,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+        }
+    }
+
+    libraryVariants.all {
+        outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.LibraryVariantOutputImpl
+            outputImpl.outputFileName = "ovcirrusapi-${project.version}.aar"
         }
     }
     compileOptions {

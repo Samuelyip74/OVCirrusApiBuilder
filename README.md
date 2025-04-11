@@ -31,14 +31,8 @@ Complete API can be found here (https://eu.manage.ovcirrus.com/apidoc/apidoc.htm
 
 To install:
 
-Method 1:
-1. Download .aar library and import into Android Studio
-2. Add implementation (project(':ovcirrusapi')) in gradle
-3. Sync gradle
-
-Method 2:
-1. Add "maven( url = "https://jitpack.io")" to repositories
-2. Add implementation("com.al_enterprise.ovcirrusapi:10.4.3"))
+1. Download ovcirrusapi-x.x.x.aar library and import into libs/ folder
+2. Add implementation implementation(files("libs/ovcirrusapi-x.x.x.aar")) in build.gradle.kts
 3. Sync gradle
 
 ---

@@ -1,2 +1,2 @@
 /build
-!libs/my-library.aar
+!/build/output/aar/*.aar

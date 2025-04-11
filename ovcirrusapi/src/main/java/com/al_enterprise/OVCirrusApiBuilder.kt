@@ -1,5 +1,6 @@
 package com.al_enterprise
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.al_enterprise.dataclasses.ApiResponse
@@ -29,8 +30,18 @@ class OVCirrusApiBuilder(private val context: Context) {
     private val tokenProvider: TokenProvider = TokenProvider(context)
 
     companion object {
-        fun newInstance(context: Context): OVCirrusApiBuilder {
-            return OVCirrusApiBuilder(context)
+        @SuppressLint("StaticFieldLeak")
+        private var INSTANCE: OVCirrusApiBuilder? = null
+
+        fun initialize(context: Context): OVCirrusApiBuilder {
+            if (INSTANCE == null) {
+                INSTANCE = OVCirrusApiBuilder(context)
+            }
+            return INSTANCE!!
+        }
+
+        fun getInstance(): OVCirrusApiBuilder {
+            return INSTANCE ?: throw IllegalStateException("OVCirrusApiBuilder is not initialized. Call initialize(context) first.")
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.demo
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -28,6 +29,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navController: NavController
+
+    private lateinit var apiClient: OVCirrusApiBuilder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,7 +109,7 @@ class MainActivity : AppCompatActivity() {
         // In MainActivity
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                val apiClient = OVCirrusApiBuilder(this@MainActivity).apply {
+                apiClient = OVCirrusApiBuilder.initialize(this@MainActivity).apply {
                     setEmail("kahyean.yip@gmail.com")
                     setPassword("Ciscotac%2688")
                     setAppId("671f13d3e0748137d6fc5a27")
@@ -115,7 +118,7 @@ class MainActivity : AppCompatActivity() {
                 }.build()  // This will ensure authentication is completed
 
 
-                val result = apiClient.getUsersInOrganization<Organization>("632a9823803a31ad755226ee")
+                val result = apiClient!!.getUsersInOrganization<Organization>("632a9823803a31ad755226ee")
                 if (result.status == 200 && result.data != null) {
                     Log.d("API", "API Success: ${result.data}")
                 } else {
@@ -132,5 +135,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun logout() {}
     // TODO
+
 }
 

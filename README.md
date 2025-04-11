@@ -44,9 +44,16 @@ Method 2:
 ---
 ## 📦 How to use the library
 
-Step 1: Initialize the builder
+Step 1: In MainActivity or My Application, declare an object of OVCirrusApiBuilder
 
-    val apiClient = OVCirrusApiBuilder(context).apply {
+    class MainActivity : AppCompatActivity() {
+
+        // declare the OVCirrusApiBuilder object and name as apiClient
+        private lateinit var apiClient: OVCirrusApiClient
+
+Step 2: Initialize the builder
+
+    val apiClient = OVCirrusApiBuilder.initialize(context).apply {
         setEmail("email")
         setPassword("password")
         setAppId("appId")
@@ -54,17 +61,48 @@ Step 1: Initialize the builder
         setBaseUrl("baseUrl eg. https://eu.manage.ovcirrus.com/")
     }.build()  
 
-Step 2: Use the builder to make API calls
+Step 3: Use the object to make API calls
 
+    GlobalScope.launch(Dispatchers.Main) {
+        try {
 
-    val result = apiClient.getUsersInOrganization<Organization>("orgId")
-    if (result.status == 200 && result.data != null) {
-        Log.d("API", "API Success: ${result.data}")
-    } else {
-        Log.e("API", "API Error: ${result.errorMsg} - ${result.errorMsg}")
+            val result = apiClient.getUserProfile<UserProfile>()
+            if (result.status == 200 && result.data != null) {
+                Log.d("API", "API Success: ${result.data}")
+            } else {
+                Log.e("API", "API Error: ${result.errorMsg} - ${result.errorMsg}")
+            }
+
+        } catch (e: Exception) {
+            Log.e("API", "Error during initialization: ${e.message}")
+        }
+    }
+
+Note: Calling OVCirrusApiBuilder instance from other fragments or activities.
+
+Step 1: Get the instance
+
+    val apiClient = OVCirrusApiBuilder.getInstance()
+
+Step 2: Use the instance to make API calls
+
+    GlobalScope.launch(Dispatchers.Main) {
+        try {
+
+            val result = apiClient.getUserProfile<UserProfile>()
+            if (result.status == 200 && result.data != null) {
+                Log.d("API", "API Success: ${result.data}")
+            } else {
+                Log.e("API", "API Error: ${result.errorMsg} - ${result.errorMsg}")
+            }
+
+        } catch (e: Exception) {
+            Log.e("API", "Error during initialization: ${e.message}")
+        }
     }
 
 Note: Library must be use with coroutines.
+
 ---
 ## 📦 Methods
 

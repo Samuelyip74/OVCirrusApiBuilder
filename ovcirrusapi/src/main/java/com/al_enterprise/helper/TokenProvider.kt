@@ -9,16 +9,16 @@ class TokenProvider(private val context: Context) {
 
     // Get the stored token
     fun getToken(): String? {
-        return sharedPreferences.getString("API_TOKEN", null)
+        return sharedPreferences.getString("ovcirrusapi_API_TOKEN", null)
     }
 
     // Save the token
     fun setToken(token: String) {
-        sharedPreferences.edit().putString("API_TOKEN", token).apply()
+        sharedPreferences.edit().putString("ovcirrusapi_API_TOKEN", token).apply()
     }
 
     // Remove the token (e.g., logout)
     fun removeToken() {
-        sharedPreferences.edit().remove("API_TOKEN").apply()
+        sharedPreferences.edit().remove("ovcirrusapi_API_TOKEN").apply()
     }
 }

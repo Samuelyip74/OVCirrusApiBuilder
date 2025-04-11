@@ -120,7 +120,7 @@ Note: Library must be use with coroutines.
 |                  |            |                 |
 
 
-Check the [Releases](#) tab for `.zip` downloads.
+Check the [Releases](https://github.com/Samuelyip74/OVCirrusApiBuilder/releases/tag/10.4.3) tab for `.zip` downloads.
 
 ---
 

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- EditText for First Name -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editFirstName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="First Name"
+        android:textSize="14sp" />
+
+    <!-- EditText for Last Name -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editLastName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Last Name"
+        android:textSize="14sp" />
+
+    <!-- EditText for Email -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editEmail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:textSize="14sp" />
+
+    <!-- EditText for Country -->
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/editCountry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Country"
+        android:textSize="14sp" />
+
+</LinearLayout>

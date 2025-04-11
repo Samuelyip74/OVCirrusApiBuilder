@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bottom Navigation Text Style -->
+    <style name="BottomNavItemActiveTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">10sp</item>  <!-- Adjust size here -->
+    </style>
+
+    <style name="BottomNavItemInactiveTextAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">10sp</item>  <!-- Adjust size for inactive items -->
+    </style>
+</resources>

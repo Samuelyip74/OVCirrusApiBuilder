@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center">
+
+    <!-- Centered Logo Image -->
+    <ImageView
+        android:id="@+id/logoImageView"
+        android:layout_width="250dp"
+        android:layout_height="300dp"
+        android:layout_marginBottom="32dp"
+        android:src="@drawable/ovc_logo"
+        android:contentDescription="@string/app_logo"
+        android:layout_gravity="center" />
+
+    <!-- ProgressBar (Spinner) -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
+    <!-- Email Input Field -->
+    <EditText
+        android:id="@+id/emailEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Email"
+        android:inputType="textEmailAddress"
+        android:padding="10dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Password Input Field -->
+    <EditText
+        android:id="@+id/passwordEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Password"
+        android:inputType="textPassword"
+        android:padding="10dp"
+        android:layout_marginBottom="24dp" />
+
+
+    <!-- Scan Button -->
+    <Button
+        android:id="@+id/scanQrButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Scan QR Code"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Login Button -->
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_marginBottom="16dp"/>
+
+
+</LinearLayout>

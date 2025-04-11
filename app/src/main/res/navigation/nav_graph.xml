@@ -2,24 +2,24 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dashboardFragment">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.example.demo.ui.alarm.AlarmFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_alarm" />
-
-    <fragment
-        android:id="@+id/navigation_dashboard"
+        android:id="@+id/dashboardFragment"
         android:name="com.example.demo.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
+        android:label="Dashboard"
         tools:layout="@layout/fragment_dashboard" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
+        android:id="@+id/alarmFragment"
+        android:name="com.example.demo.ui.alarm.AlarmFragment"
+        android:label="Alarm"
+        tools:layout="@layout/fragment_alarm" />
+
+    <fragment
+        android:id="@+id/profileFragment"
         android:name="com.example.demo.ui.profile.ProfileFragment"
-        android:label="@string/title_notifications"
+        android:label="Profile"
         tools:layout="@layout/fragment_profile" />
 </navigation>

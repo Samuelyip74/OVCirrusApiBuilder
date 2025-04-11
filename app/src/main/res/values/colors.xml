@@ -7,4 +7,44 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Base application colors -->
+    <color name="colorPrimary">#6200EE</color> <!-- deep purple 500 -->
+    <color name="colorPrimaryDark">#3F51B5</color> <!-- deep purple 700 -->
+    <color name="colorAccent">#03DAC5</color> <!-- teal 200 -->
+
+    <!-- Standard grayscale palette -->
+    <color name="colorBlack">#000000</color>
+    <color name="colorWhite">#FFFFFF</color>
+    <color name="colorGrayLight">#F0F0F0</color>
+    <color name="colorGray">#9E9E9E</color>
+    <color name="colorGrayDark">#616161</color>
+
+    <!-- Notification colors -->
+    <color name="colorSuccess">#4CAF50</color> <!-- green 500 -->
+    <color name="colorInfo">#2196F3</color> <!-- blue 500 -->
+    <color name="colorWarning">#FFC107</color> <!-- amber 500 -->
+    <color name="colorError">#F44336</color> <!-- red 500 -->
+
+    <!-- Background colors -->
+    <color name="backgroundColor">#FFFFFF</color> <!-- White background -->
+    <color name="backgroundLight">#FAFAFA
+    </color> <!-- Very light gray, for off-white backgrounds -->
+    <color name="backgroundDark">#303030</color> <!-- Dark gray, for dark mode backgrounds -->
+
+    <!-- Text colors -->
+    <color name="textColorPrimary">#212121</color> <!-- Very dark gray, almost black -->
+    <color name="textColorSecondary">#757575</color> <!-- Medium-dark gray -->
+    <color name="textColorTertiary">#BDBDBD
+    </color> <!-- Light gray for disabled or lower priority text -->
+
+    <!-- Other UI elements -->
+    <color name="dividerColor">#BDBDBD</color>
+    <color name="light_blue_600">#FF039BE5</color>
+    <color name="light_blue_900">#FF01579B</color>
+    <color name="light_blue_A200">#FF40C4FF</color>
+    <color name="light_blue_A400">#FF00B0FF</color>
+    <color name="black_overlay">#66000000</color> <!-- Light gray used for dividing lines -->
+    <color name="red">#FF0000</color> <!-- red 500 -->
+
 </resources>

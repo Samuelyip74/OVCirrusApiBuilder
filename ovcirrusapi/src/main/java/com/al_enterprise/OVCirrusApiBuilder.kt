@@ -108,6 +108,17 @@ class OVCirrusApiBuilder(private val context: Context) {
     // endregion
 
     // region Device API methods
+
+    suspend fun <T> createADevice(orgId: String, siteId: String, deviceData: DeviceData): ApiResponse<DeviceData> {
+        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
+        return apiClient.getApiService<ApiService>().postData(endpoint,deviceData)
+    }
+
+    suspend fun <T> getAllDevices(orgId: String, siteId: String): ApiResponse<List<DeviceDetail>> {
+        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
+        return apiClient.getApiService<ApiService>().getData(endpoint)
+    }
+
     suspend fun <T> getDeviceById(orgId: String, deviceId: String): ApiResponse<DeviceData> {
         val endpoint: String = "api/ov/v1/organizations/$orgId/devices/$deviceId"
         return apiClient.getApiService<ApiService>().getData(endpoint)
@@ -126,12 +137,6 @@ class OVCirrusApiBuilder(private val context: Context) {
     suspend fun <T> updateRemoteAP(orgId: String, siteId: String, deviceId: String, deviceData: DeviceData): ApiResponse<DeviceData> {
         val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/remote-aps/$deviceId"
         return apiClient.getApiService<ApiService>().putData(endpoint,deviceData)
-    }
-
-    // This method specifies that you want the response to be of type `UserProfile`
-    suspend fun <T> getAllDevices(orgId: String, siteId: String): ApiResponse<List<DeviceDetail>> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
-        return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getAllDevicesFromOrganization(orgId: String): ApiResponse<List<DeviceDetail>> {

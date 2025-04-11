@@ -68,18 +68,16 @@ Note: Library must be use with coroutines.
 ---
 ## 📦 Methods
 
-| Methods           | Function                                     | Remarks                                                                                                                                    |
-|-------------------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| authenticate      | Perform API authentication to retrieve token | https://docs.ovcirrus.com/ov/authentication-api                                                                                            |
-| getUserProfile    | Get User Profile                             | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/get                                               |
-| updateUserProfile | Update User Profile                          | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/put                                               |
-| createADevice     | Create a device                              | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/post |
+| Methods                       | Function                                     | Remarks                                                                                                                                    |
+|-------------------------------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
+| authenticate                  | Perform API authentication to retrieve token | https://docs.ovcirrus.com/ov/authentication-api                                                                                            |
+| getUserProfile                | Get User Profile                             | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/get                                               |
+| updateUserProfile             | Update User Profile                          | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/put                                               |
+| createADevice                 | Create a device                              | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/post |
+| getAllDevices                 | Get all devices declared in a site           | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/get  |                                                                                                                                           
+| getAllDevicesFromOrganization | Get all devices declared in a organization   | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1devices/get                |
+|                               |                                              |                                                                                                                                            |
     
-
-
-
-
-Check the [Releases](#) tab for `.zip` downloads.
 
 ---
 ## 📦 Releases

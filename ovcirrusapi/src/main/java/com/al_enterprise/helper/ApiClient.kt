@@ -1,6 +1,5 @@
 package com.al_enterprise.helper
 
-import android.util.Log
 import com.al_enterprise.dataclasses.AuthToken
 import com.al_enterprise.dataclasses.LoginCredentials
 import com.google.gson.GsonBuilder
@@ -13,16 +12,26 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.reflect.Type
 
 
 class ApiClient(
     private val baseUrl: String,
-    private val email: String?,
-    private val password: String?,
-    private val appId: String?,
-    private val appSecret: String?,
+    private val email: String,
+    private val password: String,
+    private val appId: String,
+    private val appSecret: String,
     private val tokenProvider: TokenProvider
 ) {
+
+    private val tokenAuthenticator = TokenAuthenticator(
+        email = email,
+        password = password,
+        appId = appId,
+        appSecret = appSecret,
+        baseUrl = baseUrl
+    )
+
 
     // Create the HttpLoggingInterceptor
     private val loggingInterceptor = HttpLoggingInterceptor().apply { level = HttpLoggingInterceptor.Level.BODY }
@@ -39,7 +48,7 @@ class ApiClient(
     // Initialize Retrofit with OkHttpClient inside the constructor
     val retrofit: Retrofit by lazy {
         val client = OkHttpClient.Builder().apply {
-            addInterceptor(AuthInterceptor(tokenProvider))  // Add the AuthInterceptor
+            addInterceptor(AuthInterceptor(tokenProvider, tokenAuthenticator))  // Add the AuthInterceptor
             addInterceptor(loggingInterceptor)              // Add logging interceptor
         }.build()
 
@@ -57,43 +66,39 @@ class ApiClient(
     }
 
     // Authenticate and get the token from the backend
-    suspend fun authenticate(): Boolean {
+    suspend fun authenticate(
+        email: String,
+        password: String,
+        appId: String,
+        appSecret: String,
+        baseUrl: String
+    ): Boolean {
         val loginCredentials = LoginCredentials(
-            email = email ?: "",
-            password = password ?: "",
-            appId = appId ?: "",
-            appSecret = appSecret ?: ""
+            email = this.email ?: "",
+            password = this.password ?: "",
+            appId = this.appId ?: "",
+            appSecret = this.appSecret ?: ""
         )
 
         val response: Response<AuthToken> = getApiService<ApiService>().authenticate(loginCredentials)
 
         if (response.isSuccessful) {
             // Store the token after successful authentication
-            response.body()?.access_token?.let {
-                tokenProvider.setToken(it)
-                Log.d("ApiClient", "Token stored: $it")
+            if(response.body()?.access_token != null && response.body()?.expires_in  != null){
+                tokenProvider.setToken(response.body()?.access_token!!, response.body()?.expires_in)
             }
-
             return true
         }
         return false
     }
 
-    // Reauthenticate (log in again)
-    suspend fun reauthenticate(): Boolean {
-        return authenticate()  // Call authenticate again to re-login
-    }
 
-    // Get the valid token from TokenProvider
-    fun getValidToken(): String? {
-        return tokenProvider.getToken()  // Retrieve the stored token
-    }
 }
 
 class NullStringToZeroAdapter : JsonDeserializer<Int?> {
     override fun deserialize(
         json: JsonElement?,
-        typeOfT: java.lang.reflect.Type?,
+        typeOfT: Type?,
         context: JsonDeserializationContext?
     ): Int? {
         //Log.d("NullStringToZeroAdapter", "json: ${json?.asString}")
@@ -112,7 +117,7 @@ class NullStringToZeroAdapter : JsonDeserializer<Int?> {
 class StringTypeAdapter : JsonDeserializer<String?> {
     override fun deserialize(
         json: JsonElement?,
-        typeOfT: java.lang.reflect.Type?,
+        typeOfT: Type?,
         context: JsonDeserializationContext?
     ): String? {
         //Log.d("StringTypeAdapter", "json: ${json?.asString}")
@@ -132,7 +137,7 @@ class StringTypeAdapter : JsonDeserializer<String?> {
 class NullJsonObjectAdapter : JsonDeserializer<JsonObject?> {
     override fun deserialize(
         json: JsonElement?,
-        typeOfT: java.lang.reflect.Type?,
+        typeOfT: Type?,
         context: JsonDeserializationContext?
     ): JsonObject? {
         // If the field is null or JsonNull, return null
@@ -147,7 +152,7 @@ class NullJsonObjectAdapter : JsonDeserializer<JsonObject?> {
 class NullStringToDoubleAdapter : JsonDeserializer<Double?> {
     override fun deserialize(
         json: JsonElement?,
-        typeOfT: java.lang.reflect.Type?,
+        typeOfT: Type?,
         context: JsonDeserializationContext?
     ): Double? {
         return if (json == null || json.asString.isEmpty()) {

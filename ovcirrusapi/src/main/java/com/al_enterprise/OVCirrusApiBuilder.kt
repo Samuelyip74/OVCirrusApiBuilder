@@ -77,7 +77,7 @@ class OVCirrusApiBuilder(private val context: Context) {
             throw IllegalStateException("All fields (baseUrl, email, password, appId, appSecret) must be set")
         }
 
-        apiClient = ApiClient(baseUrl!!, email, password, appId, appSecret, tokenProvider)
+        apiClient = ApiClient(baseUrl!!, email!!, password!!, appId!!, appSecret!!, tokenProvider)
 
         val isAuthenticated = authenticate()
 
@@ -91,28 +91,66 @@ class OVCirrusApiBuilder(private val context: Context) {
     private suspend fun authenticate(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
-                val isAuthenticated = apiClient.authenticate()
-                if (isAuthenticated) {
-                    Log.d("OVCApiBuilder", "Authentication successful.")
+                // Check if expires in is empty
+                var isAuthenticated: Boolean
+                val tokenExpiry = tokenProvider.getExpiresIn()
+                val token =  tokenProvider.getToken()
+                val currentTime = System.currentTimeMillis()
+                val fiveMinutes = 5 * 60 * 1000L // 5 minutes
+
+                // Check token is present and token is less than 5 minutes before expiry
+                if(token != null && tokenExpiry - currentTime < fiveMinutes) {
+                    Log.d("OVCApiBuilder", "Token is about to expire. Refreshing...")
+                    isAuthenticated = apiClient.authenticate(
+                        email!!,
+                        password!!,
+                        appId!!,
+                        appSecret!!,
+                        baseUrl!!
+                    )
+                    if (isAuthenticated) {
+                        Log.d("OVCApiBuilder", "Token refresh successful.")
+                    } else {
+                        Log.e("OVCApiBuilder", "Token refresh failed.")
+                    }
+                } else if (token == null) {
+                    isAuthenticated = apiClient.authenticate(
+                        email!!,
+                        password!!,
+                        appId!!,
+                        appSecret!!,
+                        baseUrl!!
+                    )
+                    if (isAuthenticated) {
+                        Log.d("OVCApiBuilder", "Authentication successful.")
+                    } else {
+                        Log.e("OVCApiBuilder", "Authentication failed.")
+                    }
                 } else {
-                    Log.e("OVCApiBuilder", "Authentication failed.")
+                    isAuthenticated = true
+                    //Log.d("OVCApiBuilder", "Token is still valid.")
                 }
                 isAuthenticated
             } catch (e: Exception) {
-                Log.e("OVCApiBuilder", "Error during authentication: ${e.message}")
+                //Log.e("OVCApiBuilder", "Error during authentication: ${e.message}")
                 false
             }
         }
     }
 
+    fun logout(){
+        tokenProvider.removeToken()
+        //Log.d("OVCApiBuilder", "Token removed.")
+    }
+
     // region User API methods
     suspend fun <T> getUserProfile(): ApiResponse<UserProfile> {
-        val endpoint: String = "api/ov/v1/user/profile"
+        val endpoint = "api/ov/v1/user/profile"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> updateUserProfile(userProfile: UserProfile): ApiResponse<UserProfile> {
-        val endpoint: String = "api/ov/v1/user/profile"
+        val endpoint = "api/ov/v1/user/profile"
         return apiClient.getApiService<ApiService>().putData(endpoint,userProfile)
     }
 
@@ -121,105 +159,105 @@ class OVCirrusApiBuilder(private val context: Context) {
     // region Device API methods
 
     suspend fun <T> createADevice(orgId: String, siteId: String, deviceData: DeviceData): ApiResponse<DeviceData> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
+        val endpoint = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
         return apiClient.getApiService<ApiService>().postData(endpoint,deviceData)
     }
 
     suspend fun <T> getAllDevices(orgId: String, siteId: String): ApiResponse<List<DeviceDetail>> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
+        val endpoint = "api/ov/v1/organizations/$orgId/sites/$siteId/devices"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getAllDevicesFromOrganization(orgId: String): ApiResponse<List<DeviceDetail>> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/devices"
+        val endpoint = "api/ov/v1/organizations/$orgId/sites/devices"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getDeviceById(orgId: String, deviceId: String): ApiResponse<DeviceData> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/devices/$deviceId"
+        val endpoint = "api/ov/v1/organizations/$orgId/devices/$deviceId"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> updateADevice(orgId: String, siteId: String, deviceId: String, deviceData: DeviceData): ApiResponse<DeviceData> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices/$deviceId"
+        val endpoint = "api/ov/v1/organizations/$orgId/sites/$siteId/devices/$deviceId"
         return apiClient.getApiService<ApiService>().putData(endpoint,deviceData)
     }
 
     suspend fun <T> deleteADevice(orgId: String, siteId: String, deviceId: String): ApiResponse<String> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/devices/$deviceId"
+        val endpoint = "api/ov/v1/organizations/$orgId/sites/$siteId/devices/$deviceId"
         return apiClient.getApiService<ApiService>().deleteData(endpoint)
     }
 
     suspend fun <T> updateRemoteAP(orgId: String, siteId: String, deviceId: String, deviceData: DeviceData): ApiResponse<DeviceData> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/sites/$siteId/remote-aps/$deviceId"
+        val endpoint = "api/ov/v1/organizations/$orgId/sites/$siteId/remote-aps/$deviceId"
         return apiClient.getApiService<ApiService>().putData(endpoint,deviceData)
     }
 
     suspend fun <T> getDeviceDetails(orgId: String,deviceId: String): ApiResponse<DeviceDetail> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/devices/$deviceId/details"
+        val endpoint = "api/ov/v1/organizations/$orgId/devices/$deviceId/details"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
     // endregion
 
     // region Organization API
     suspend fun <T> getAllOrganization(): ApiResponse<Organization> {
-        val endpoint: String = "api/ov/v1/organizations"
+        val endpoint = "api/ov/v1/organizations"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getOrganizationSettings(orgId: String): ApiResponse<Organization> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/settings/basic"
+        val endpoint = "api/ov/v1/organizations/$orgId/settings/basic"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getOrganization(orgId: String): ApiResponse<Organization> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId"
+        val endpoint = "api/ov/v1/organizations/$orgId"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> updateOrganization(orgId: String, orgConfig: OrganizationConfig): ApiResponse<Organization> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId"
+        val endpoint = "api/ov/v1/organizations/$orgId"
         return apiClient.getApiService<ApiService>().putData(endpoint,orgConfig)
     }
     suspend fun <T> deleteOrganization(orgId: String): ApiResponse<String> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId"
+        val endpoint = "api/ov/v1/organizations/$orgId"
         return apiClient.getApiService<ApiService>().deleteData(endpoint)
     }
 
     suspend fun <T> getUsersInOrganization(orgId: String): ApiResponse<List<User>> {
-        val endpoint: String = "api/ov/v1/organizations/$orgId/users"
+        val endpoint = "api/ov/v1/organizations/$orgId/users"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
     // endregion
 
     // region Site API
     suspend fun <T> createASite(orgId: String, siteConfig: Site): ApiResponse<Site> {
-        val endpoint: String = "api/ov/v1/$orgId/sites"
+        val endpoint = "api/ov/v1/$orgId/sites"
         return apiClient.getApiService<ApiService>().postData(endpoint,siteConfig)
     }
 
     suspend fun <T> getOrgSites(orgId: String): ApiResponse<List<Site>> {
-        val endpoint: String = "api/ov/v1/$orgId/sites"
+        val endpoint = "api/ov/v1/$orgId/sites"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getOrgSitesBuildingsFloors(orgId: String): ApiResponse<List<Site>> {
-        val endpoint: String = "api/ov/v1/$orgId/sites/buildings/floors"
+        val endpoint = "api/ov/v1/$orgId/sites/buildings/floors"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> getASite(orgId: String, siteId: String): ApiResponse<Site> {
-        val endpoint: String = "api/ov/v1/$orgId/sites/$siteId"
+        val endpoint = "api/ov/v1/$orgId/sites/$siteId"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> updateASite(orgId: String, siteId: String, siteConfig: Site): ApiResponse<Site> {
-        val endpoint: String = "api/ov/v1/$orgId/sites/$siteId"
+        val endpoint = "api/ov/v1/$orgId/sites/$siteId"
         return apiClient.getApiService<ApiService>().putData(endpoint,siteConfig)
     }
 
     suspend fun <T> deleteASite(orgId: String, siteId: String): ApiResponse<Site> {
-        val endpoint: String = "api/ov/v1/$orgId/sites/$siteId"
+        val endpoint = "api/ov/v1/$orgId/sites/$siteId"
         return apiClient.getApiService<ApiService>().deleteData(endpoint)
     }
 
@@ -227,33 +265,33 @@ class OVCirrusApiBuilder(private val context: Context) {
 
     // region SSID API
     suspend fun <T> getALlSSIDs(orgId: String): ApiResponse<SSID> {
-        val endpoint: String = "api/ov/v1/$orgId/wlan/ssids"
+        val endpoint = "api/ov/v1/$orgId/wlan/ssids"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> createSSID(orgId: String, ssidConfig: SSID): ApiResponse<SSID> {
-        val endpoint: String = "api/ov/v1/$orgId/wlan/ssids"
+        val endpoint = "api/ov/v1/$orgId/wlan/ssids"
         return apiClient.getApiService<ApiService>().postData(endpoint,ssidConfig)
     }
 
     suspend fun <T> updateSSID(orgId: String, ssidConfig: SSID): ApiResponse<SSID> {
-        val endpoint: String = "api/ov/v1/$orgId/wlan/ssids"
+        val endpoint = "api/ov/v1/$orgId/wlan/ssids"
         return apiClient.getApiService<ApiService>().putData(endpoint,ssidConfig)
     }
 
     suspend fun <T> getSSIDsByGroup(orgId: String, siteId: String, groupId: String): ApiResponse<Int> {
-        val endpoint: String = "api/ov/v1/$orgId/site/$siteId/groups/$groupId/wlan/ssids/count"
+        val endpoint = "api/ov/v1/$orgId/site/$siteId/groups/$groupId/wlan/ssids/count"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     // TODO correct the response type
     suspend fun <T> getSSIDsByName(orgId: String, name: String): ApiResponse<SSID> {
-        val endpoint: String = "api/ov/v1/$orgId/wlan/ssids/name/$name"
+        val endpoint = "api/ov/v1/$orgId/wlan/ssids/name/$name"
         return apiClient.getApiService<ApiService>().getData(endpoint)
     }
 
     suspend fun <T> deleteSSID(orgId: String, names: String): ApiResponse<List<SSIDResponse>> {
-        val endpoint: String = "api/ov/v1/$orgId/wlan/ssids"
+        val endpoint = "api/ov/v1/$orgId/wlan/ssids"
         return apiClient.getApiService<ApiService>().deleteDataWithBody(endpoint, names)
     }
 

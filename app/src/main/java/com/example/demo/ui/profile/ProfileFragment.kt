@@ -25,11 +25,12 @@ class ProfileFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val apiClient = OVCirrusApiBuilder.getInstance()
+
 
 
         GlobalScope.launch(Dispatchers.Main) {
             try {
+                val apiClient = OVCirrusApiBuilder.getInstance().build()
 
                 val result = apiClient.getUserProfile<UserProfile>()
                 if (result.status == 200 && result.data != null) {

@@ -115,10 +115,10 @@ class MainActivity : AppCompatActivity() {
                     setAppId("671f13d3e0748137d6fc5a27")
                     setAppSecret("db0553664df3a0c7f86986619748096dab6d1b58a91f1be9dffd093e50426280")
                     setBaseUrl("https://eu.manage.ovcirrus.com/")
-                }.build()  // This will ensure authentication is completed
+                }.build()
 
 
-                val result = apiClient!!.getUsersInOrganization<Organization>("632a9823803a31ad755226ee")
+                val result = apiClient.getUsersInOrganization<Organization>("632a9823803a31ad755226ee")
                 if (result.status == 200 && result.data != null) {
                     Log.d("API", "API Success: ${result.data}")
                 } else {
@@ -133,7 +133,9 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private fun logout() {}
+    private fun logout() {
+        apiClient.logout()
+    }
     // TODO
 
 }

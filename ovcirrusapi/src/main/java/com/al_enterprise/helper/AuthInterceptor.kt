@@ -5,7 +5,8 @@ import okhttp3.Interceptor
 import okhttp3.Response
 
 class AuthInterceptor(
-    private val tokenProvider: TokenProvider
+    private val tokenProvider: TokenProvider,
+    private val tokenAuthenticator: TokenAuthenticator
 ) : Interceptor {
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -34,20 +35,14 @@ class AuthInterceptor(
             response.close()
 
             synchronized(this) {
-                val reauthenticated = reauthenticate()  // Trigger re-authentication
-
-                if (reauthenticated) {
-                    // Retry the original request with the new token
+                val isAuthenticated = tokenAuthenticator.reauthenticate()
+                if (isAuthenticated == true) {
                     val newToken = tokenProvider.getToken()
-                    newToken?.let {
-                        request = request.newBuilder()
-                            .removeHeader("Authorization")  // Remove the old token
-                            .addHeader("Authorization", "Bearer $it")  // Add the new token
-                            .build()
-
-                        // Retry the original request with the new token
-                        response = chain.proceed(request)
-                    }
+                    request = request.newBuilder()
+                        .removeHeader("Authorization")
+                        .addHeader("Authorization", "Bearer $newToken")
+                        .build()
+                    response = chain.proceed(request)
                 }
             }
         }
@@ -55,11 +50,6 @@ class AuthInterceptor(
         return response
     }
 
-    // Reauthenticate the user (e.g., by calling authenticate method again)
-    private fun reauthenticate(): Boolean {
-        // Trigger re-authentication logic here (for example, call authenticate() again)
-        return true // Re-authentication logic goes here
-    }
 }
 
 

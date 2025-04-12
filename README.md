@@ -1,7 +1,7 @@
 
 # OmniVista Cirrus API Builder - **OVCApiBuilder**
 
-**OVCApiBuilder** is a lightweight Android library that enables developers to interact seamlessly with the OmniVista Cirrus RESTful API.
+**OVCirrusApiBuilder** is a lightweight Android library that enables developers to interact seamlessly with the OmniVista Cirrus RESTful API.
 
 ---
 

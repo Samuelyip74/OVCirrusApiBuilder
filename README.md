@@ -98,6 +98,29 @@ Step 2: Use the instance to make API calls
 Note: Library must be use with coroutines.
 
 ---
+## Try the demo app
+
+Step 1: Clone the git repository to your device
+
+Step 2: Open the project with Android Studio
+
+Step 3: Build and run the app on your physical device
+
+Step 4: Create a Text QR code with the following parameters
+
+    {
+        "email"         :       "<email>"
+        "password"      :       "<password>"
+        "appId"         :       "<appId>"
+        "appSecret"     :       "<appSecret>"
+        "apiBaseUrl"    :       "<apiBaseUrl>"
+    }
+
+Step 5: Scan the QR code with the camera on your device
+
+Step 6. Click Login button
+
+---
 ## 📦 Methods
 
 | Methods                       | Function                                     | Remarks                                                                                                                                    |

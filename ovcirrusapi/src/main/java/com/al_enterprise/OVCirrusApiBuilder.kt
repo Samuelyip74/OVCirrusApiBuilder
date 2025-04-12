@@ -88,7 +88,7 @@ class OVCirrusApiBuilder(private val context: Context) {
         return this
     }
 
-    private suspend fun authenticate(): Boolean {
+    suspend fun authenticate(): Boolean {
         return withContext(Dispatchers.IO) {
             try {
                 // Check if expires in is empty

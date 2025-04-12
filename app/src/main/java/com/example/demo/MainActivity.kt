@@ -1,22 +1,20 @@
 package com.example.demo
 
-import android.annotation.SuppressLint
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
-import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.al_enterprise.OVCirrusApiBuilder
 import com.al_enterprise.dataclasses.Organization
-import com.example.demo.databinding.ActivityMainBinding
 import com.google.android.material.navigation.NavigationView
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
@@ -29,12 +27,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navigationView: NavigationView
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var navController: NavController
+    private lateinit var sharedPreferences: SharedPreferences
 
     private lateinit var apiClient: OVCirrusApiBuilder
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        sharedPreferences = getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
 
         // Set up the Toolbar
         val toolbar: Toolbar = findViewById(R.id.toolbar)
@@ -109,14 +110,8 @@ class MainActivity : AppCompatActivity() {
         // In MainActivity
         GlobalScope.launch(Dispatchers.Main) {
             try {
-                apiClient = OVCirrusApiBuilder.initialize(this@MainActivity).apply {
-                    setEmail("kahyean.yip@gmail.com")
-                    setPassword("Ciscotac%2688")
-                    setAppId("671f13d3e0748137d6fc5a27")
-                    setAppSecret("db0553664df3a0c7f86986619748096dab6d1b58a91f1be9dffd093e50426280")
-                    setBaseUrl("https://eu.manage.ovcirrus.com/")
-                }.build()
 
+                apiClient = OVCirrusApiBuilder.getInstance()
 
                 val result = apiClient.getUsersInOrganization<Organization>("632a9823803a31ad755226ee")
                 if (result.status == 200 && result.data != null) {
@@ -134,9 +129,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logout() {
+        sharedPreferences.edit().remove("EMAIL").apply()
+        sharedPreferences.edit().remove("PASSWORD").apply()
+        sharedPreferences.edit().remove("APP_ID").apply()
+        sharedPreferences.edit().remove("APP_SECRET").apply()
+        sharedPreferences.edit().remove("API_BASE_URL").apply()
         apiClient.logout()
+
+        Toast.makeText(this, "Logged out successfully", Toast.LENGTH_SHORT).show()
+
+        // Navigate to LoginActivity
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish() // Close MainActivity to ensure user can't go back to it
     }
-    // TODO
 
 }
 

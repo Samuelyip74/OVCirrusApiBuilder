@@ -6,7 +6,7 @@ import android.util.Log
 
 class TokenProvider(private val context: Context) {
 
-    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("AppSettings", Context.MODE_PRIVATE)
+    private val sharedPreferences: SharedPreferences = context.getSharedPreferences("CIRRUS_AppSettings", Context.MODE_PRIVATE)
 
     // Get the stored token
     fun getToken(): String? {

@@ -49,6 +49,10 @@ dependencies {
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 
+    implementation ("com.journeyapps:zxing-android-embedded:4.1.0")
+    implementation ("com.google.code.gson:gson:2.8.8")
+
+
     implementation(project(":ovcirrusapi"))
 
     testImplementation(libs.junit)

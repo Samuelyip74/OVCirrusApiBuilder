@@ -1,11 +1,13 @@
-#  OmniVista Cirrus API Builder - OVCApiBuilder
 
-**OVCApiBuilder** is an Android library that lets developers interact with OmniVista Cirrus Restful API
+# OmniVista Cirrus API Builder - **OVCApiBuilder**
+
+**OVCApiBuilder** is a lightweight Android library that enables developers to interact seamlessly with the OmniVista Cirrus RESTful API.
 
 ---
 
-## ✨ API implemented
-Complete API can be found here (https://eu.manage.ovcirrus.com/apidoc/apidoc.html)
+## ✨ Supported APIs
+
+The full API documentation is available at: [OmniVista Cirrus API Docs](https://eu.manage.ovcirrus.com/apidoc/apidoc.html)
 
 - Authentication API
 - User API
@@ -13,153 +15,144 @@ Complete API can be found here (https://eu.manage.ovcirrus.com/apidoc/apidoc.htm
 - Organization API
 - Site API
 
-
 ---
 
 ## 🛠️ Built With
 
 - **Kotlin**
-- **Retrofit** – To make API calls
-- **Gson convertor** – to convert JSON to Kotlin objects
-- **Logging Interceptor Database** – for logging http raw data
+- **Retrofit** – for API calls
+- **Gson Converter** – for converting JSON to Kotlin objects
+- **Logging Interceptor** – for logging raw HTTP data
 
 ---
 
 ## 🚀 Installation
 
-> This app is not available on the Play Store.
+> This library is not available on the Google Play Store.
 
-To install:
+To install manually:
 
-1. Download ovcirrusapi-x.x.x.aar library and import into libs/ folder
-2. Add implementation implementation(files("libs/ovcirrusapi-x.x.x.aar")) in build.gradle.kts
-3. Sync gradle
+1. Download the `ovcirrusapi-x.x.x.aar` file and place it in the `libs/` folder of your project.
+2. Add the following to your `build.gradle.kts`:
+   ```kotlin
+   implementation(files("libs/ovcirrusapi-x.x.x.aar"))
+   ```
+3. Sync your Gradle files.
 
 ---
-## 📦 How to use the library
 
-Step 1: In MainActivity or My Application, declare an object of OVCirrusApiBuilder
+## 📦 Usage Guide
 
-    class MainActivity : AppCompatActivity() {
+### Step 1: Declare the API client
 
-        // declare the OVCirrusApiBuilder object and name as apiClient
-        private lateinit var apiClient: OVCirrusApiClient
+In your `MainActivity` or `Application` class:
 
-Step 2: Initialize the builder
+```kotlin
+private lateinit var apiClient: OVCirrusApiClient
+```
 
-    val apiClient = OVCirrusApiBuilder.initialize(context).apply {
-        setEmail("email")
-        setPassword("password")
-        setAppId("appId")
-        setAppSecret("appSecret")
-        setBaseUrl("baseUrl eg. https://eu.manage.ovcirrus.com/")
-    }.build()  
+### Step 2: Initialize the client
 
-Step 3: Use the object to make API calls
+```kotlin
+val apiClient = OVCirrusApiBuilder.initialize(context).apply {
+    setEmail("your_email")
+    setPassword("your_password")
+    setAppId("your_app_id")
+    setAppSecret("your_app_secret")
+    setBaseUrl("https://eu.manage.ovcirrus.com/")
+}.build()
+```
 
-    GlobalScope.launch(Dispatchers.Main) {
-        try {
+### Step 3: Make API calls
 
-            val result = apiClient.getUserProfile<UserProfile>()
-            if (result.status == 200 && result.data != null) {
-                Log.d("API", "API Success: ${result.data}")
-            } else {
-                Log.e("API", "API Error: ${result.errorMsg} - ${result.errorMsg}")
-            }
-
-        } catch (e: Exception) {
-            Log.e("API", "Error during initialization: ${e.message}")
+```kotlin
+GlobalScope.launch(Dispatchers.Main) {
+    try {
+        val result = apiClient.getUserProfile<UserProfile>()
+        if (result.status == 200 && result.data != null) {
+            Log.d("API", "Success: ${result.data}")
+        } else {
+            Log.e("API", "Error: ${result.errorMsg}")
         }
+    } catch (e: Exception) {
+        Log.e("API", "Initialization error: ${e.message}")
     }
-
-Note: Calling OVCirrusApiBuilder instance from other fragments or activities.
-
-Step 1: Get the instance
-
-    val apiClient = OVCirrusApiBuilder.getInstance()
-
-Step 2: Use the instance to make API calls
-
-    GlobalScope.launch(Dispatchers.Main) {
-        try {
-
-            val result = apiClient.getUserProfile<UserProfile>()
-            if (result.status == 200 && result.data != null) {
-                Log.d("API", "API Success: ${result.data}")
-            } else {
-                Log.e("API", "API Error: ${result.errorMsg} - ${result.errorMsg}")
-            }
-
-        } catch (e: Exception) {
-            Log.e("API", "Error during initialization: ${e.message}")
-        }
-    }
-
-Note: Library must be use with coroutines.
+}
+```
 
 ---
-## Try the demo app
 
-Step 1: Clone the git repository to your device
+### Accessing the API Client in Other Activities or Fragments
 
-Step 2: Open the project with Android Studio
+#### Step 1: Retrieve the instance
 
-Step 3: Build and run the app on your physical device
+```kotlin
+val apiClient = OVCirrusApiBuilder.getInstance()
+```
 
-Step 4: Create a Text QR code with the following parameters
+#### Step 2: Make API calls (same as above)
 
-    {
-        "email"         :       "<email>"
-        "password"      :       "<password>"
-        "appId"         :       "<appId>"
-        "appSecret"     :       "<appSecret>"
-        "apiBaseUrl"    :       "<apiBaseUrl>"
-    }
-
-Step 5: Scan the QR code with the camera on your device
-
-Step 6. Click Login button
+> **Note**: This library requires usage with Kotlin coroutines.
 
 ---
-## 📦 Methods
 
-| Methods                       | Function                                     | Remarks                                                                                                                                    |
-|-------------------------------|----------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
-| authenticate                  | Perform API authentication to retrieve token | https://docs.ovcirrus.com/ov/authentication-api                                                                                            |
-| getUserProfile                | Get User Profile                             | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/get                                               |
-| updateUserProfile             | Update User Profile                          | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/put                                               |
-| createADevice                 | Create a device                              | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/post |
-| getAllDevices                 | Get all devices declared in a site           | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/get  |                                                                                                                                           
-| getAllDevicesFromOrganization | Get all devices declared in a organization   | https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1devices/get                |
-|                               |                                              |                                                                                                                                            |
-    
+## 🧪 Try the Demo App
+
+1. Clone the repository to your local device.
+2. Open the project using Android Studio.
+3. Build and run the app on a physical device.
+4. Generate a **Text QR Code** with the following format:
+   ```json
+   {
+       "email": "<your_email>",
+       "password": "<your_password>",
+       "appId": "<your_app_id>",
+       "appSecret": "<your_app_secret>",
+       "apiBaseUrl": "<your_api_base_url>"
+   }
+   ```
+5. Scan the QR code with your device's camera.
+6. Tap the **Login** button to authenticate.
 
 ---
+
+## 📚 Available Methods
+
+| Method                        | Description                                      | Documentation Link                                                                                                                                      |
+|------------------------------|--------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `authenticate`               | Authenticates and retrieves a token              | [Authentication API](https://docs.ovcirrus.com/ov/authentication-api)                                                                                   |
+| `getUserProfile`             | Retrieves the user profile                       | [User Profile - GET](https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/get)                                      |
+| `updateUserProfile`          | Updates the user profile                         | [User Profile - PUT](https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/User/paths/~1ov~1v1~1user~1profile/put)                                      |
+| `createADevice`              | Creates a device under a site                    | [Create Device](https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/post) |
+| `getAllDevices`              | Gets all devices within a specific site          | [Site Devices](https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1%7BsiteId%7D~1devices/get) |
+| `getAllDevicesFromOrganization` | Retrieves all devices across an organization   | [Organization Devices](https://eu.manage.ovcirrus.com/apidoc/apidoc.html#tag/Device/paths/~1ov~1v1~1organizations~1%7BorgId%7D~1sites~1devices/get)        |
+
+---
+
 ## 📦 Releases
 
 | Version          | Date       | Notes           |
 |------------------|------------|-----------------|
 | v10.4.3 Build 03 | 2025-04-10 | Initial release |
-|                  |            |                 |
 
-
-Check the [Releases](https://github.com/Samuelyip74/OVCirrusApiBuilder/releases/tag/10.4.3) tab for `.zip` downloads.
+Visit the [Releases](https://github.com/Samuelyip74/OVCirrusApiBuilder/releases/tag/10.4.3) page to download `.zip` packages.
 
 ---
 
 ## 📄 License
 
-```text
-Copyright (c) [Samuel Yip Kah Yean] 2025
+```
+Copyright (c) Samuel Yip Kah Yean 2025
 
 This software is licensed for personal, non-commercial use only.
 
 You are NOT permitted to:
 - Use this software for any commercial purposes.
-- Modify, adapt, reverse-engineer, or create derivative works based on this software.
-- Distribute, sublicense, or share this software in any form.
+- Modify, adapt, reverse-engineer, or create derivative works.
+- Distribute, sublicense, or share this software.
 
 All rights are reserved by the author.
 
-For commercial licensing inquiries or permissions, please contact: [kahyean.yip@gmail.com]
-
+For commercial licensing or permission inquiries, please contact:
+kahyean.yip@gmail.com
+```

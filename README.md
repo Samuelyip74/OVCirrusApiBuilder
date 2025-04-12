@@ -116,7 +116,7 @@ val apiClient = OVCirrusApiBuilder.getInstance()
 5. Scan the QR code with your device's camera.
 6. Tap the **Login** button to authenticate.
 
-[![Demo](https://share.gifyoutube.com/KzB6Gb.gif)](https://www.youtube.com/shorts/Fq7wqiczGAw)
+[![Demo](https://github.com/Samuelyip74/OVCirrusApiBuilder/blob/master/assets/DemoScreenShot.png)](https://www.youtube.com/shorts/Fq7wqiczGAw)
 
 ---
 

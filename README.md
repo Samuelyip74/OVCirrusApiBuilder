@@ -69,8 +69,10 @@ val apiClient = OVCirrusApiBuilder.initialize(context).apply {
 GlobalScope.launch(Dispatchers.Main) {
     try {
         val result = apiClient.getUserProfile<UserProfile>()
-        if (result.status == 200 && result.data != null) {
-            Log.d("API", "Success: ${result.data}")
+        val userProfile = Gson().fromJson(Gson().toJson(result.data), UserProfile::class.java)
+
+       if (result.status == 200 && result.data != null) {
+            Log.d("API", "Success: ${userProfile.data}")
         } else {
             Log.e("API", "Error: ${result.errorMsg}")
         }

@@ -113,7 +113,7 @@ class MainActivity : AppCompatActivity() {
 
                 apiClient = OVCirrusApiBuilder.getInstance()
 
-                val result = apiClient.getUsersInOrganization<Organization>("632a9823803a31ad755226ee")
+                val result = apiClient.getUsersInOrganization("632a9823803a31ad755226ee")
                 if (result.status == 200 && result.data != null) {
                     Log.d("API", "API Success: ${result.data}")
                 } else {
